@@ -25,6 +25,10 @@
         .card-title {font-size: 0.95rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;} 
         .card-title a {color: inherit; text-decoration: none;} 
         .badge {font-size: 0.65rem; font-weight: 700; background-color: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; padding: 0.15rem 0.5rem; border-radius: 0.375rem;} 
+        .badge-stars {font-size: 0.65rem; font-weight: 700; background-color: #fef3c7; border: 1px solid #fcd34d; color: #92400e; padding: 0.15rem 0.5rem; border-radius: 0.375rem; white-space: nowrap;}
+        .refresh-btn {background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white !important; transition: all 0.2s;}
+        .refresh-btn:hover:not(:disabled) {background: linear-gradient(135deg, #1d4ed8, #1e40af); transform: scale(1.03);}
+        .refresh-btn:disabled {opacity: 0.6; cursor: not-allowed;}
         .ai-summary-zone p {font-size: 0.92rem; line-height: 1.55; color: #334155; font-weight: 500;} 
         .fold-section {margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9;} 
         .fold-trigger {display: flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; color: #2563eb; cursor: pointer; list-style: none; outline: none;} 
@@ -55,6 +59,7 @@
             <nav>
                 <button class="nav-btn active">🐱 GitHub 热门</button>
                 <button class="nav-btn disabled" disabled>➕ 待扩展数据源</button>
+                <button class="nav-btn refresh-btn" id="refreshBtn" onclick="triggerRefresh()">🔄 手动刷新</button>
             </nav>
         </div>
     </header>
@@ -67,6 +72,7 @@
                             <a href="https://github.com/Lum1104/Understand-Anything" target="_blank">Lum1104/Understand-Anything</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 2,299 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>把你手上的代码、文档或知识库变成一张可以点击、搜索、提问的互动知识图谱，让你快速看懂整个项目是怎么拼起来的。</p></div>
                     <details class="fold-section">
@@ -97,6 +103,7 @@
                             <a href="https://github.com/anthropics/claude-plugins-official" target="_blank">anthropics/claude-plugins-official</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 2,193 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>这是 Anthropic 官方维护的 Claude Code 插件市场，提供精选的高质量插件，方便用户直接安装使用。</p></div>
                     <details class="fold-section">
@@ -130,6 +137,7 @@
                             <a href="https://github.com/colbymchenry/codegraph" target="_blank">colbymchenry/codegraph</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 2,456 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>CodeGraph 是一个本地运行的代码知识图谱工具，能为 AI 编程助手（如 Claude Code、Cursor 等）提供预索引的代码结构信息，让 AI 直接查询图谱而不用反复扫描文件，从而大幅节省 token、降低成本和提升速度。</p></div>
                     <details class="fold-section">
@@ -164,6 +172,7 @@
                             <a href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank">rohitg00/ai-engineering-from-scratch</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 1,521 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>一个从零手写AI的免费课程，覆盖435节课、4种编程语言，让你真正搞懂并亲手构建AI系统，而非只会调包。</p></div>
                     <details class="fold-section">
@@ -199,6 +208,7 @@
                             <a href="https://github.com/Fincept-Corporation/FinceptTerminal" target="_blank">Fincept-Corporation/FinceptTerminal</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 545 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>这是一个用C++20和Qt6开发的桌面金融终端，集成了AI、实时行情、量化分析和海量数据源，帮你一站式完成投资研究和交易决策。</p></div>
                     <details class="fold-section">
@@ -236,6 +246,7 @@
                             <a href="https://github.com/multica-ai/andrej-karpathy-skills" target="_blank">multica-ai/andrej-karpathy-skills</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 3,507 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>用一份配置文件，让 Claude Code 遵循四大原则（先思考、少写代码、只改必须改的地方、用测试驱动目标），避免 AI 编程时常见的乱猜、过度设计和乱改代码等问题。</p></div>
                     <details class="fold-section">
@@ -271,6 +282,7 @@
                             <a href="https://github.com/dotnet/skills" target="_blank">dotnet/skills</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 266 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>这个仓库是微软 .NET 团队为 AI 编程代理（如 Copilot、Claude Code、Cursor 等）专门整理的一套“技能包”，让 AI 能更懂 .NET 和 C#，帮开发者更高效地处理编码任务。</p></div>
                     <details class="fold-section">
@@ -305,6 +317,7 @@
                             <a href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank">ChromeDevTools/chrome-devtools-mcp</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 435 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>让 AI 编程助手（如 Antigravity、Claude、Cursor 等）通过 MCP 协议直接控制 Chrome 浏览器，实现自动化操作、深度调试和性能分析。</p></div>
                     <details class="fold-section">
@@ -339,6 +352,7 @@
                             <a href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills" target="_blank">mukul975/Anthropic-Cybersecurity-Skills</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 281 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>这是一个为AI代理打造的开源网络安全技能库，包含754条生产级技能，覆盖26个安全领域，能让AI像资深安全分析师一样干活。</p></div>
                     <details class="fold-section">
@@ -373,6 +387,7 @@
                             <a href="https://github.com/presenton/presenton" target="_blank">presenton/presenton</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 241 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>Presenton 是一个开源的 AI 演示文稿生成器，支持本地部署或桌面App，让你用自己的大模型和密钥生成 PPT，无需订阅，完全掌控数据和隐私。</p></div>
                     <details class="fold-section">
@@ -407,6 +422,7 @@
                             <a href="https://github.com/multica-ai/multica" target="_blank">multica-ai/multica</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 410 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>Multica 是一个开源平台，让你像分配任务给同事一样，把编码 AI 代理变成真正的队友：指派任务、跟踪进度、积累技能，实现人机协作。</p></div>
                     <details class="fold-section">
@@ -441,6 +457,7 @@
                             <a href="https://github.com/trimstray/the-book-of-secret-knowledge" target="_blank">trimstray/the-book-of-secret-knowledge</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 628 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>一份汇集各种技术秘籍、命令行技巧、工具和资源的超全清单，堪称给开发者的「秘密知识宝典」。</p></div>
                     <details class="fold-section">
@@ -475,6 +492,7 @@
                             <a href="https://github.com/odoo/odoo" target="_blank">odoo/odoo</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 386 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>Odoo 是一套开源的企业管理软件，涵盖了从销售、财务到生产、人事等几乎所有业务功能。</p></div>
                     <details class="fold-section">
@@ -508,6 +526,7 @@
                             <a href="https://github.com/NVlabs/LongLive" target="_blank">NVlabs/LongLive</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 94 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>LongLive 2.0 是一个支持长视频实时生成的基础设施，通过 NVFP4 精度和并行化技术，大幅提升训练与推理效率。</p></div>
                     <details class="fold-section">
@@ -542,6 +561,7 @@
                             <a href="https://github.com/yt-dlp/yt-dlp" target="_blank">yt-dlp/yt-dlp</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 759 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>yt-dlp 是一个功能强大的命令行工具，能从数千个网站下载视频和音频，是 youtube-dl 的增强分支。</p></div>
                     <details class="fold-section">
@@ -577,6 +597,7 @@
                             <a href="https://github.com/janestreet/magic-trace" target="_blank">janestreet/magic-trace</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        <span class="badge badge-stars">⭐ 68 today</span>
                     </div>
                     <div class="ai-summary-zone"><p>magic-trace 是一款高性能追踪工具，能记录进程在快照时刻前约10毫秒内的每一个函数调用细节，并生成可交互的时间线，帮你看清代码到底在做什么。</p></div>
                     <details class="fold-section">
@@ -608,5 +629,35 @@
     <footer class="site-footer">
         <p>© 2026 自动化空间 · 高内聚低耦合模块化架构</p>
     </footer>
+
+    <script>
+    const REFRESH_TOKEN = "lN0PyDMr3kFJQpHS7LKc_HO_b4yluKiG";
+    async function triggerRefresh() {
+        const btn = document.getElementById('refreshBtn');
+        if (!btn) return;
+        btn.disabled = true;
+        btn.textContent = '⏳ 刷新中...';
+        try {
+            const resp = await fetch('/api/refresh', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'token=' + encodeURIComponent(REFRESH_TOKEN)
+            });
+            const data = await resp.json();
+            if (data.ok) {
+                btn.textContent = '✅ 完成，刷新页面...';
+                setTimeout(function(){ location.reload(true); }, 1500);
+            } else {
+                btn.textContent = '❌ 失败';
+                btn.disabled = false;
+                setTimeout(function(){ btn.textContent = '🔄 手动刷新'; }, 3000);
+            }
+        } catch(e) {
+            btn.textContent = '❌ 网络错误';
+            btn.disabled = false;
+            setTimeout(function(){ btn.textContent = '🔄 手动刷新'; }, 3000);
+        }
+    }
+    </script>
 </body>
 </html>

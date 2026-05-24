@@ -3,7 +3,7 @@ import html
 HTML_FILE = "index.html"  # 输出到项目的根目录
 
 
-def build(db, output_filename=HTML_FILE):
+def build(db, refresh_token="", output_filename=HTML_FILE):
     current_list = db.get("current_trending", [])
     pool = db.get("archive_pool", {})
     cards_html = ""
@@ -13,6 +13,8 @@ def build(db, output_filename=HTML_FILE):
         if meta:
             safe_title = html.escape(title)
             safe_desc = html.escape(meta['raw_description'] or 'No description.')
+            stars_display = meta.get("stars_today", "")
+            stars_badge = f'<span class="badge badge-stars">⭐ {html.escape(stars_display)} today</span>' if stars_display else ""
             ai_raw = meta['ai_summary']
             summary_part = ""
             details_part = ai_raw
@@ -35,6 +37,7 @@ def build(db, output_filename=HTML_FILE):
                             <a href="{meta["url"]}" target="_blank">{safe_title}</a>
                         </h2>
                         <span class="badge">GITHUB</span>
+                        {stars_badge}
                     </div>
                     <div class="ai-summary-zone">{summary_part}</div>
                     <details class="fold-section">
@@ -85,6 +88,10 @@ def build(db, output_filename=HTML_FILE):
         .card-title {{font-size: 0.95rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}} 
         .card-title a {{color: inherit; text-decoration: none;}} 
         .badge {{font-size: 0.65rem; font-weight: 700; background-color: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; padding: 0.15rem 0.5rem; border-radius: 0.375rem;}} 
+        .badge-stars {{font-size: 0.65rem; font-weight: 700; background-color: #fef3c7; border: 1px solid #fcd34d; color: #92400e; padding: 0.15rem 0.5rem; border-radius: 0.375rem; white-space: nowrap;}}
+        .refresh-btn {{background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white !important; transition: all 0.2s;}}
+        .refresh-btn:hover:not(:disabled) {{background: linear-gradient(135deg, #1d4ed8, #1e40af); transform: scale(1.03);}}
+        .refresh-btn:disabled {{opacity: 0.6; cursor: not-allowed;}}
         .ai-summary-zone p {{font-size: 0.92rem; line-height: 1.55; color: #334155; font-weight: 500;}} 
         .fold-section {{margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9;}} 
         .fold-trigger {{display: flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; color: #2563eb; cursor: pointer; list-style: none; outline: none;}} 
@@ -115,6 +122,7 @@ def build(db, output_filename=HTML_FILE):
             <nav>
                 <button class="nav-btn active">🐱 GitHub 热门</button>
                 <button class="nav-btn disabled" disabled>➕ 待扩展数据源</button>
+                <button class="nav-btn refresh-btn" id="refreshBtn" onclick="triggerRefresh()">🔄 手动刷新</button>
             </nav>
         </div>
     </header>
@@ -126,6 +134,41 @@ def build(db, output_filename=HTML_FILE):
     </footer>
 </body>
 </html>"""
+
+    # ===== ADD: 注入刷新按钮 JS =====
+    if refresh_token:
+        refresh_js = f"""
+    <script>
+    const REFRESH_TOKEN = "{refresh_token}";
+    async function triggerRefresh() {{
+        const btn = document.getElementById('refreshBtn');
+        if (!btn) return;
+        btn.disabled = true;
+        btn.textContent = '⏳ 刷新中...';
+        try {{
+            const resp = await fetch('/api/refresh', {{
+                method: 'POST',
+                headers: {{'Content-Type': 'application/x-www-form-urlencoded'}},
+                body: 'token=' + encodeURIComponent(REFRESH_TOKEN)
+            }});
+            const data = await resp.json();
+            if (data.ok) {{
+                btn.textContent = '✅ 完成，刷新页面...';
+                setTimeout(function(){{ location.reload(true); }}, 1500);
+            }} else {{
+                btn.textContent = '❌ 失败';
+                btn.disabled = false;
+                setTimeout(function(){{ btn.textContent = '🔄 手动刷新'; }}, 3000);
+            }}
+        }} catch(e) {{
+            btn.textContent = '❌ 网络错误';
+            btn.disabled = false;
+            setTimeout(function(){{ btn.textContent = '🔄 手动刷新'; }}, 3000);
+        }}
+    }}
+    </script>"""
+        html_template = html_template.replace("</body>", refresh_js + "\n</body>")
+    # ===== END ADD =====
 
     try:
         with open(output_filename, "w", encoding="utf-8") as f:

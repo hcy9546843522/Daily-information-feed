@@ -44,7 +44,22 @@ def fetch_trending_projects():
         desc_tag = article.find("p", class_="col-9")
         basic_desc = desc_tag.get_text(strip=True) if desc_tag else ""
 
-        projects.append({"title": title, "url": project_url, "raw_description": basic_desc})
+        # ===== ADD: 抓取 stars today =====
+        stars_today = ""
+        f6_div = article.find("div", class_="f6")
+        if f6_div:
+            stars_span = f6_div.find("span", class_="float-sm-right")
+            if stars_span:
+                raw_stars = stars_span.get_text(strip=True)
+                m = re.search(r"([\d,]+)\s*stars?\s*today", raw_stars, re.IGNORECASE)
+                if m:
+                    stars_today = m.group(1)
+        # ===== END ADD =====
+
+        projects.append({
+            "title": title, "url": project_url,
+            "raw_description": basic_desc, "stars_today": stars_today
+        })
 
     print(f"✅ 成功抓取到今日官方榜单共 {len(projects)} 个项目。")
     return projects
@@ -114,10 +129,12 @@ def run(db):
         if title in archive and "新入榜项目" not in archive[title]["ai_summary"]:
             skipped_count += 1
             archive[title]["updated_at"] = current_time
+            archive[title]["stars_today"] = proj.get("stars_today", "")
             continue
 
         if new_request_count >= PROCESS_LIMIT:
             archive[title] = {"url": proj["url"], "raw_description": proj["raw_description"],
+                              "stars_today": proj.get("stars_today", ""),
                               "ai_summary": "<p>📢 新入榜项目，等待下一批次 AI 总结生成...</p>",
                               "updated_at": current_time}
             continue
@@ -131,7 +148,9 @@ def run(db):
         total_in_tokens += in_t
         total_out_tokens += out_t
 
-        archive[title] = {"url": proj["url"], "raw_description": proj["raw_description"], "ai_summary": html_summary,
+        archive[title] = {"url": proj["url"], "raw_description": proj["raw_description"],
+                          "stars_today": proj.get("stars_today", ""),
+                          "ai_summary": html_summary,
                           "updated_at": current_time}
 
     print("\n[GitHub 模块] 🧹 正在执行数据缓存池自动瘦身...")

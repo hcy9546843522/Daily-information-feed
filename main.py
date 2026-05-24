@@ -52,7 +52,8 @@ def main():
 
     # 4. 触发网页渲染模块，构建前端展示页
     print("\n[渲染模块] 🖥️ 正在重新静态化构建前端页面...")
-    build_html.build(db)
+    refresh_token = os.getenv("REFRESH_TOKEN", "")
+    build_html.build(db, refresh_token=refresh_token)
 
     print("\n✅ 全流程执行完毕！可以直接双击打开项目根目录下的 index.html 查看。")
 
