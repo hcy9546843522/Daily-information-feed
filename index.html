@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人专属看板</title>
+    <style>
+        * {box-sizing: border-box; margin: 0; padding: 0;} 
+        body {background-color: #f8fafc; color: #334155; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; padding-bottom: 5rem;} 
+        header {background-color: rgba(255, 255, 255, 0.95); border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 50;} 
+        .header-container {max-width: 1280px; margin: 0 auto; padding: 0.85rem 1.5rem; display: flex; justify-content: space-between; align-items: center;} 
+        .brand-zone {display: flex; align-items: center; gap: 0.75rem;} 
+        .logo-box {background-color: #2563eb; color: white; font-weight: bold; width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;} 
+        .brand-title {font-size: 1rem; font-weight: 700; color: #0f172a;} 
+        .brand-subtitle {font-size: 0.7rem; color: #94a3b8; font-weight: 500;} 
+        nav {display: flex; gap: 0.5rem; background-color: #f1f5f9; padding: 0.25rem; border-radius: 0.75rem;} 
+        .nav-btn {border: none; padding: 0.35rem 1rem; font-size: 0.75rem; font-weight: 600; border-radius: 0.5rem; cursor: pointer;} 
+        .nav-btn.active {background-color: white; color: #2563eb;} 
+        .nav-btn.disabled {background: transparent; color: #94a3b8; cursor: not-allowed;} 
+        main {max-width: 1280px; margin: 0 auto; padding: 2rem 1.5rem;} 
+        .grid {display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.25rem;} 
+        .card {background-color: white; border: 1px solid #e2e8f0; border-radius: 1rem; display: flex; flex-direction: column; justify-content: space-between;} 
+        .card-body {padding: 1.5rem;} 
+        .card-header {display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 0.75rem;} 
+        .card-title {font-size: 0.95rem; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;} 
+        .card-title a {color: inherit; text-decoration: none;} 
+        .badge {font-size: 0.65rem; font-weight: 700; background-color: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; padding: 0.15rem 0.5rem; border-radius: 0.375rem;} 
+        .ai-summary-zone p {font-size: 0.92rem; line-height: 1.55; color: #334155; font-weight: 500;} 
+        .fold-section {margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9;} 
+        .fold-trigger {display: flex; align-items: center; gap: 0.35rem; font-size: 0.75rem; font-weight: 600; color: #2563eb; cursor: pointer; list-style: none; outline: none;} 
+        .fold-trigger::-webkit-details-marker {display: none;} 
+        .fold-trigger .arrow {font-size: 0.65rem; display: inline-block; transition: transform 0.2s;} 
+        .fold-section[open] .fold-trigger .arrow {transform: rotate(90deg);} 
+        .ai-content {margin-top: 0.75rem;} 
+        .ai-content h3 {font-size: 0.85rem; font-weight: 600; color: #0f172a; margin-top: 0.85rem; margin-bottom: 0.35rem; border-left: 3px solid #3b82f6; padding-left: 0.4rem;} 
+        .ai-content p {font-size: 0.85rem; color: #475569; line-height: 1.5; margin-bottom: 0.5rem;} 
+        .ai-content ul {list-style-type: disc; padding-left: 1.1rem; margin-bottom: 0.5rem;} 
+        .ai-content li {font-size: 0.85rem; color: #475569; margin-bottom: 0.2rem;} 
+        .raw-desc-zone {margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9; font-size: 0.7rem; color: #94a3b8;} 
+        .raw-title {font-weight: 600; color: #64748b; display: block;} 
+        .card-footer {padding: 0.75rem 1.5rem; border-top: 1px solid #f8fafc; background-color: #fafafa; border-radius: 0 0 1rem 1rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.65rem; color: #94a3b8;} 
+        footer.site-footer {text-align: center; padding: 2.5rem 0; font-size: 0.7rem; color: #94a3b8; border-top: 1px solid #e2e8f0; background-color: white; margin-top: 8rem;}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="brand-zone">
+                <div class="logo-box">✨</div>
+                <div>
+                    <h1 class="brand-title">专属自动化快讯聚合</h1>
+                    <p class="brand-subtitle">模块化全静态免跨域版本</p>
+                </div>
+            </div>
+            <nav>
+                <button class="nav-btn active">🐱 GitHub 热门</button>
+                <button class="nav-btn disabled" disabled>➕ 待扩展数据源</button>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="grid">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/Lum1104/Understand-Anything" target="_blank">Lum1104/Understand-Anything</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>把你手上的代码、文档或知识库变成一张可以点击、搜索、提问的互动知识图谱，让你快速看懂整个项目是怎么拼起来的。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul><li>自动分析项目中的每个文件、函数、类和依赖，生成交互式知识图谱，支持点击查看摘要、关系和导览，还能按架构层自动配色分组。</li><li>支持模糊和语义搜索（如“哪些部分处理认证？”）、差异影响分析（改动前先看波及范围），以及角色自适应UI（根据你是初学开发者、项目经理还是高阶用户显示不同详细程度）。</li></ul>
+<h3>应用场景</h3>
+<p>适合新成员快速上手大型代码库、开发团队分析业务逻辑与架构耦合、知识库/维基的关联挖掘与可视化梳理。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>Graphs that teach &gt; graphs that impress. Turn any code into an interactive knowledge graph you can explore, search, and ask questions about. Works with Claude Code, Codex, Cursor, Copilot, Gemini CLI, and more.</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/anthropics/claude-plugins-official" target="_blank">anthropics/claude-plugins-official</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>这是 Anthropic 官方维护的 Claude Code 插件市场，提供精选的高质量插件，方便用户直接安装使用。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>官方打理，既有自家开发的插件，也有经过审核的第三方社区插件，质量有保障。</li>
+<li>安装超级简单，在 Claude Code 里用 <code>/plugin install 插件名</code> 就能装，也可以直接在插件面板里浏览安装。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合所有使用 Claude Code 的开发者，帮助他们通过安装插件扩展 Claude 的能力，比如增加自定义命令、智能体或技能，提升开发效率。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>Official, Anthropic-managed directory of high quality Claude Code Plugins.</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/colbymchenry/codegraph" target="_blank">colbymchenry/codegraph</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>CodeGraph 是一个本地运行的代码知识图谱工具，能为 AI 编程助手（如 Claude Code、Cursor 等）提供预索引的代码结构信息，让 AI 直接查询图谱而不用反复扫描文件，从而大幅节省 token、降低成本和提升速度。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>平均节省 35% 成本、减少 70% 工具调用，代码库越大效果越显著（如 Tokio 项目成本降低 52%、工具调用减少 89%）。</li>
+<li>100% 本地运行，自带运行时无需安装 Node.js，一条命令即可完成安装和自动配置 AI 助手。</li>
+<li>同时支持 Claude Code、Cursor、Codex CLI、OpenCode、Hermes Agent 等多种主流 AI 编码工具。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合在使用 AI 编码助手进行大型代码库开发时，需要让 AI 快速理解代码架构、符号关系和调用链的场景，例如大规模 TypeScript、Python、Rust 等项目中的架构问答、代码重构、复杂调试等任务。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>Pre-indexed code knowledge graph for Claude Code, Codex, Cursor, OpenCode, and Hermes Agent — fewer tokens, fewer tool calls, 100% local</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/rohitg00/ai-engineering-from-scratch" target="_blank">rohitg00/ai-engineering-from-scratch</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>一个从零手写AI的免费课程，覆盖435节课、4种编程语言，让你真正搞懂并亲手构建AI系统，而非只会调包。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>完整20阶段体系：从线性代数、反向传播、Tokenizer、Attention到自主Agent群，数学→手写实现→生产库调用，一步步闭环。</li>
+<li>每节课产出可复用产物：不只是知识，每课产出一个Prompt、技能、Agent或MCP服务器，可直接用于实际项目。</li>
+<li>四种语言并行实现：Python、TypeScript、Rust、Julia，同一算法用不同语言手写，深度理解底层机制。</li>
+<li>免费开源MIT许可：无需GPU，可在个人笔记本上完整运行，无任何付费或平台绑定。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合想系统掌握AI工程核心原理的开发者、转向AI方向的工程师、以及希望团队从“调API”升级为“能自建AI系统”的技术团队；也适合作为高校或企业内部AI课程的完整教材。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>Learn it. Build it. Ship it for others.</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/Fincept-Corporation/FinceptTerminal" target="_blank">Fincept-Corporation/FinceptTerminal</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>这是一个用C++20和Qt6开发的桌面金融终端，集成了AI、实时行情、量化分析和海量数据源，帮你一站式完成投资研究和交易决策。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>多资产分析：支持股票、债券、衍生品等估值建模、组合优化、风险指标（VaR、夏普等）。</li>
+<li>37个AI智能体：内置巴菲特、格雷厄姆等投资大师模型，支持本地和主流大模型（OpenAI、Claude等）。</li>
+<li>100+数据源：覆盖全球宏观经济、政府数据、交易所行情、另类数据（如市场情绪）。</li>
+<li>实时交易与算法交易：支持加密货币、股票，集成16家券商接口，自带纸交易引擎。</li>
+<li>专业量化库：18个QuantLib模块（定价、随机、波动率等），外加AI量化实验室（因子发现、强化学习）。</li>
+<li>可视化工作流：节点编辑器拖拽构建自动化流程，内置海事/地缘政治等全球情报分析。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合量化交易员、金融研究员、个人投资者用于市场数据获取、投资策略回测、实时盯盘与交易执行，以及进行多资产组合风险评估和宏观经济分析。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>FinceptTerminal is a modern finance application offering advanced market analytics, investment research, and economic data tools, designed for interactive exploration and data-driven decision-making in a user-friendly environment.</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/multica-ai/andrej-karpathy-skills" target="_blank">multica-ai/andrej-karpathy-skills</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>用一份配置文件，让 Claude Code 遵循四大原则（先思考、少写代码、只改必须改的地方、用测试驱动目标），避免 AI 编程时常见的乱猜、过度设计和乱改代码等问题。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>强制 AI 在编码前先推理与提问，避免错误假设和隐藏的困惑。</li>
+<li>鼓励极致简洁，砍掉多余抽象和“未来可能用到的”功能，减少冗余代码量。</li>
+<li>要求手术刀式修改——只动任务相关的代码，不碰已有注释、格式和不相关的死代码。</li>
+<li>用“测试先行”代替模糊指令，让 AI 自己验证成功标准，减少人工反复澄清。</li>
+</ul>
+<h3>应用场景</h3>
+<p>任何使用 Claude Code（或兼容 CLAUDE.md 的工具）进行日常开发、重构、调试的项目团队，尤其是希望 AI 助手产出更可靠、更简洁代码的团队。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>A single CLAUDE.md file to improve Claude Code behavior, derived from Andrej Karpathy&#x27;s observations on LLM coding pitfalls.</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/dotnet/skills" target="_blank">dotnet/skills</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>这个仓库是微软 .NET 团队为 AI 编程代理（如 Copilot、Claude Code、Cursor 等）专门整理的一套“技能包”，让 AI 能更懂 .NET 和 C#，帮开发者更高效地处理编码任务。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>覆盖 .NET 开发的方方面面：包含构建（MSBuild）、数据访问（EF Core）、诊断、测试、NuGet 管理、升级迁移、MAUI、ASP.NET Core 等十多个专用插件。</li>
+<li>主流 AI 工具都能用：支持 Copilot CLI、Claude Code、VS Code Copilot、Cursor 甚至 OpenAI Codex，安装简单，即插即用。</li>
+<li>有量化指标驱动改进：提供公开的仪表板，展示每个插件的准确性和效率评分趋势，方便评估和优化。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合所有使用 AI 编程助手进行 .NET/C# 开发的场景，比如：用 AI 调试构建错误、自动升级项目到新 .NET 版本、优化测试流程、排查性能问题，以及生成符合 .NET 最佳实践的代码。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>Repository for skills to assist AI coding agents with .NET and C#</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/ChromeDevTools/chrome-devtools-mcp" target="_blank">ChromeDevTools/chrome-devtools-mcp</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>让 AI 编程助手（如 Antigravity、Claude、Cursor 等）通过 MCP 协议直接控制 Chrome 浏览器，实现自动化操作、深度调试和性能分析。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+  <li>性能洞察：录制 Chrome 性能轨迹，提取可操作的优化建议。</li>
+  <li>高级调试：分析网络请求、截图、查看控制台日志（含源码映射堆栈）。</li>
+  <li>可靠自动化：基于 Puppeteer 自动执行操作并等待结果，减少脚本脆弱性。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合开发 AI 驱动的网页自动化测试、性能诊断、端到端调试等场景，辅助编码工具在浏览器环境中进行智能操作和问题排查。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>Chrome DevTools for coding agents</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/mukul975/Anthropic-Cybersecurity-Skills" target="_blank">mukul975/Anthropic-Cybersecurity-Skills</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>这是一个为AI代理打造的开源网络安全技能库，包含754条生产级技能，覆盖26个安全领域，能让AI像资深安全分析师一样干活。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>五框架全覆盖：每条技能同时映射MITRE ATT&CK、NIST CSF 2.0、MITRE ATLAS、D3FEND和NIST AI RMF，一套技能搞定多种合规需求。</li>
+<li>即插即用：支持Claude Code、GitHub Copilot、Codex CLI、Cursor、Gemini CLI等26+主流AI平台，克隆或npx命令即可让AI获得专业安全能力。</li>
+<li>结构化专家知识：不是简单的脚本或清单，而是包含前置条件、执行步骤、结果验证的完整决策流程，填补了通用大模型缺乏安全领域实操知识的空白。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合安全运营团队、威胁狩猎、数字取证与事件响应（DFIR）、渗透测试等场景，快速给AI代理注入资深分析师级别的操作能力，帮助弥补全球480万网络安全人才缺口。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>754 structured cybersecurity skills for AI agents · Mapped to 5 frameworks: MITRE ATT&amp;CK, NIST CSF 2.0, MITRE ATLAS, D3FEND &amp; NIST AI RMF · agentskills.io standard · Works with Claude Code, GitHub Copilot, Codex CLI, Cursor, Gemini CLI &amp; 20+ platforms · 26 security domains · Apache 2.0</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/presenton/presenton" target="_blank">presenton/presenton</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>Presenton 是一个开源的 AI 演示文稿生成器，支持本地部署或桌面App，让你用自己的大模型和密钥生成 PPT，无需订阅，完全掌控数据和隐私。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>完全开源（Apache 2.0），无厂商锁定、无强制订阅，可自托管或使用桌面应用。</li>
+<li>支持 OpenAI、Gemini、Ollama、LM Studio 等数十种模型，自带 API，也可用自己的模板和主题。</li>
+<li>可导出为可编辑 PPTX 和 PDF，集成 MCP 服务器，支持通过 ChatGPT 登录直接使用。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合需要频繁制作演示文稿的团队或个人，特别是对数据隐私要求高、希望避免第三方付费订阅、或想灵活切换不同 AI 模型生成内容的业务场景。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>Open-Source AI Presentation Generator and API (Gamma, Beautiful AI, Decktopus Alternative)</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/multica-ai/multica" target="_blank">multica-ai/multica</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>Multica 是一个开源平台，让你像分配任务给同事一样，把编码 AI 代理变成真正的队友：指派任务、跟踪进度、积累技能，实现人机协作。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>代理即队友：像分配 issue 给同事一样指派给代理，代理能自主写代码、报告阻塞、更新状态，全程无需手动复制粘贴提示词。</li>
+<li>Squad 智能路由：支持将多个代理和人类组成小队，由队长代理自动分配工作，无需关心具体由谁执行，随团队增长保持路由稳定。</li>
+<li>可复用技能：每次任务（部署、迁移、代码审查）都会沉淀为团队可复用的技能，持续提升整体能力，支持实时进度流式传输。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合软件开发团队，尤其是小团队希望借助多个 AI 编码代理（如 Claude Code、Codex、GitHub Copilot CLI 等）放大产能的场景；也可用于需要长期积累自动化经验、稳定管理多人+多代理协作的托管环境。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>The open-source managed agents platform. Turn coding agents into real teammates — assign tasks, track progress, compound skills.</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/trimstray/the-book-of-secret-knowledge" target="_blank">trimstray/the-book-of-secret-knowledge</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>一份汇集各种技术秘籍、命令行技巧、工具和资源的超全清单，堪称给开发者的「秘密知识宝典」。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>精选数千条实用资源：涵盖系统管理、网络安全、性能调优、CLI 工具、黑客技巧、速查表等。</li>
+<li>结构清晰易查：按类别（如编辑器、终端、网络、容器、数据库等）分门别类，方便快速检索。</li>
+<li>持续维护更新：社区活跃，定期收录最新、最硬核的技术“黑魔法”与最佳实践。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合所有希望提升技术效率的开发者、运维工程师和安全从业者，在日常工作、学习研究或搭建环境时作为速查手册和灵感来源。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>A collection of inspiring lists, manuals, cheatsheets, blogs, hacks, one-liners, cli/web tools and more.</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/odoo/odoo" target="_blank">odoo/odoo</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>Odoo 是一套开源的企业管理软件，涵盖了从销售、财务到生产、人事等几乎所有业务功能。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>包含 CRM、网站搭建、电商、仓库、项目、财务、POS、人力资源、营销、制造等 30+ 成熟应用，开箱即用。</li>
+<li>各应用既可独立使用，也能无缝集成，按需组合成完整的 ERP 系统。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合中小企业、成长型公司用于统一管理销售、采购、库存、财务、人事等业务流程，也适合开发者在其基础上定制深度行业方案。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>Odoo. Open Source Apps To Grow Your Business.</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/NVlabs/LongLive" target="_blank">NVlabs/LongLive</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>LongLive 2.0 是一个支持长视频实时生成的基础设施，通过 NVFP4 精度和并行化技术，大幅提升训练与推理效率。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>支持 NVFP4 量化（W4A4）和 KV Cache 压缩，推理速度达 45.7 FPS，且质量无损。</li>
+<li>采用平衡序列并行、多镜头注意力汇聚等技术，可实现 AR 训练与实时长视频生成。</li>
+<li>兼容 BF16 和 NVFP4，提供完整的训练、蒸馏和推理管线，并支持无限长视频生成。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合需要实时交互式长视频生成的场景，如虚拟主播、AI 导演、游戏角色动画、视频会议背景生成等。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>LongLive 2.0: Infra - Long Video Gen</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/yt-dlp/yt-dlp" target="_blank">yt-dlp/yt-dlp</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>yt-dlp 是一个功能强大的命令行工具，能从数千个网站下载视频和音频，是 youtube-dl 的增强分支。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>支持数千个网站，包括 YouTube、Bilibili、Twitter 等，覆盖面广</li>
+<li>提供 Windows、macOS、Linux 等多平台独立可执行文件，无需 Python 环境即可使用</li>
+<li>拥有丰富的选项：格式选择、字幕下载、元数据修改、SponsorBlock 跳过赞助、插件扩展等</li>
+<li>持续更新维护，修复 bug 并添加新功能，比原版 youtube-dl 更活跃</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合个人用户下载在线视频/音频用于离线观看、内容创作者批量下载素材、自动化脚本集成到媒体管理系统中，以及需要精确控制下载格式和质量的场景。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>A feature-rich command-line audio/video downloader</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <a href="https://github.com/janestreet/magic-trace" target="_blank">janestreet/magic-trace</a>
+                        </h2>
+                        <span class="badge">GITHUB</span>
+                    </div>
+                    <div class="ai-summary-zone"><p>magic-trace 是一款高性能追踪工具，能记录进程在快照时刻前约10毫秒内的每一个函数调用细节，并生成可交互的时间线，帮你看清代码到底在做什么。</p></div>
+                    <details class="fold-section">
+                        <summary class="fold-trigger">
+                            <span class="arrow">▶</span><span>展开详细分析与亮点</span>
+                        </summary>
+                        <div class="ai-content">
+                            <h3>核心亮点</h3>
+<ul>
+<li>基于 Intel Processor Trace，以约 40ns 分辨率追踪所有函数调用，且开销仅 2%~10%，适合生产环境直接使用。</li>
+<li>无需修改应用程序代码，像 perf 一样直接附加到正在运行的进程即可抓取快照。</li>
+<li>提供可交互的时间线视图，支持缩放、测量、打标，能深入观察微秒级的函数行为。</li>
+</ul>
+<h3>应用场景</h3>
+<p>适合生产环境中定位偶发慢请求、验证代码执行是否符合预期、捕获崩溃前的完整调用历史，以及分析微秒级性能瓶颈。</p>
+</div>
+                            <div class="raw-desc-zone">
+                                <span class="raw-title">Raw Description:</span>
+                                <p>magic-trace collects and displays high-resolution traces of what a process is doing</p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="card-footer">
+                    <span>🔄 每日自动流同步</span><span>2026-05-24</span>
+                </div>
+            </div></div>
+    </main>
+    <footer class="site-footer">
+        <p>© 2026 自动化空间 · 高内聚低耦合模块化架构</p>
+    </footer>
+</body>
+</html>
